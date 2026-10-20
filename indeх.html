@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Коммерческое предложение №1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one sheet of ledger paper centered on a desk; the deal moves through three clauses on the same sheet. */
+:root{
+  --desk:#1f3a4d;
+  --paper:#f3f6f1;
+  --grid:#d6e2dc;
+  --ink:#16263a;
+  --muted:#5b6b78;
+  --stamp:#d2333f;
+  --hl:#ffe36e;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0}
+body{
+  background:var(--desk);
+  background-image:radial-gradient(circle at 20% 10%,#2b4f66 0,transparent 55%),radial-gradient(circle at 90% 90%,#173040 0,transparent 50%);
+  color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:32px 48px;
+}
+.sheet{
+  position:relative;max-width:560px;margin:0 auto;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;background-position:-1px -1px;
+  border-radius:4px;box-shadow:0 30px 60px -20px rgba(0,0,0,.55),0 2px 0 rgba(255,255,255,.4) inset;
+  padding:28px 24px 32px;overflow:hidden;
+  transform:rotate(-.6deg);
+}
+@media (max-width:480px){.sheet{transform:none;padding:24px 18px 28px}}
+.meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;border-bottom:1.5px dashed var(--muted);padding-bottom:10px}
+.to{font-family:var(--f-mono);font-size:13px;color:var(--muted);margin:14px 0 22px}
+.to b{color:var(--ink);font-weight:600}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,7vw,38px);line-height:1.08;margin:0 0 6px;text-wrap:balance;letter-spacing:-.01em}
+h1 .dots{color:var(--stamp)}
+.sub{color:var(--muted);margin:0 0 22px;max-width:60ch}
+.clause{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--stamp);margin:0 0 10px;font-weight:600}
+
+.opts{position:relative;display:grid;gap:10px;min-height:340px}
+.opt{
+  display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;
+  font:inherit;font-size:16px;color:var(--ink);
+  background:#fff;border:2px solid var(--ink);border-radius:10px;
+  padding:14px 14px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);
+  transition:transform .12s ease,box-shadow .12s ease,background .12s;
+}
+.opt:hover{background:var(--hl)}
+.opt:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.opt:focus-visible{outline:3px solid var(--stamp);outline-offset:3px}
+.opt .k{font-family:var(--f-mono);font-weight:600;flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-size:13px;line-height:1}
+.opt.bad{border-style:dashed;color:var(--muted);box-shadow:none;background:rgba(255,255,255,.6);transition:left .25s cubic-bezier(.3,1.6,.5,1),top .25s cubic-bezier(.3,1.6,.5,1)}
+.opt.bad.free{position:absolute;width:min(100%,320px)}
+.opt.bad:hover{background:rgba(255,255,255,.6)}
+.toast{min-height:22px;font-family:var(--f-mono);font-size:13px;color:var(--stamp);margin-top:12px}
+
+.result{position:relative;padding:4px 0 0}
+.result .chosen{font-family:var(--f-mono);font-size:13px;color:var(--muted);margin:0 0 8px}
+.result h2{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,6vw,30px);line-height:1.12;margin:0 0 10px;text-wrap:balance}
+.result p{margin:0 0 22px;max-width:52ch}
+.stamp{
+  position:absolute;right:-6px;top:-14px;
+  font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:.06em;
+  color:var(--stamp);border:4px double var(--stamp);border-radius:8px;padding:4px 12px;
+  transform:rotate(14deg);opacity:.88;mix-blend-mode:multiply;pointer-events:none;
+  animation:thud .45s cubic-bezier(.2,1.8,.4,1) both;
+}
+@keyframes thud{from{transform:rotate(14deg) scale(2.6);opacity:0}to{transform:rotate(14deg) scale(1);opacity:.88}}
+.row{display:grid;gap:10px}
+.small{font-size:15px;padding:12px 14px}
+
+.sign{margin:6px 0 18px}
+.sigbox{
+  display:block;width:100%;height:96px;background:transparent;border:none;border-bottom:2px solid var(--ink);
+  cursor:pointer;position:relative;padding:0;font:inherit;
+}
+.sigbox:focus-visible{outline:3px solid var(--stamp);outline-offset:4px}
+.sigbox .hint{position:absolute;left:0;bottom:8px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.sigbox svg{position:absolute;inset:0;width:100%;height:100%}
+.sigbox path{fill:none;stroke:#1d3fa8;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:900;stroke-dashoffset:900}
+.sigbox.done path{animation:draw 1.1s ease forwards}
+.sigbox.done .hint{opacity:0}
+@keyframes draw{to{stroke-dashoffset:0}}
+.terms{font-family:var(--f-mono);font-size:13px;color:var(--muted);display:grid;gap:4px;margin:0 0 18px;padding:0;list-style:none}
+.terms li::before{content:"§ ";color:var(--stamp)}
+.final{background:var(--hl);border:2px solid var(--ink);border-radius:10px;padding:14px 16px;margin-top:4px}
+.final p{margin:0}
+.final p+p{margin-top:8px}
+.again{margin-top:18px;background:none;border:none;font:inherit;font-family:var(--f-mono);font-size:13px;color:var(--muted);text-decoration:underline;cursor:pointer;padding:0}
+.again:focus-visible{outline:2px solid var(--stamp)}
+.foot{max-width:560px;margin:18px auto 0;text-align:center;font-family:var(--f-mono);font-size:12px;color:#9fb6c4}
+.fade{animation:fade .35s ease both}
+@keyframes fade{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.sigbox path{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+
+
+<main class="sheet" id="sheet">
+  <div class="meta"><span>Коммерческое предложение №1</span><span>20.10.2026</span></div>
+  <div class="to">Кому: <b>самому занятому человеку в параллели 4-х классов</b><br>Срок рассмотрения: <b>1 клик</b></div>
+
+  <section id="step1">
+    <h1>Я беру чай, ты берёшь меня<span class="dots">, и…</span></h1>
+    <p class="sub">Ты занятой, поэтому самое сложное я уже сделала: придумала, куда мы пойдём. Тебе осталось выбрать.</p>
+    <p class="clause">Пункт 1. Предмет сделки</p>
+    <div class="opts" id="opts">
+      <button class="opt" data-pick="water" id="o1"><span class="k">A</span><span>…везёшь меня туда… ну, туда, куда я скажу</span></button>
+      <button class="opt" data-pick="hookah" id="o2"><span class="k">B</span><span>…наконец выполняешь своё «когда-нибудь»</span></button>
+      <button class="opt" data-pick="school" id="o3"><span class="k">C</span><span>…делаем домашку по английскому за наших четвероклассников</span></button>
+      <button class="opt bad" id="bad"><span class="k">D</span><span id="badText">…оставляешь меня в прочитанном ещё на месяц</span></button>
+    </div>
+    <div class="toast" id="toast" aria-live="polite"></div>
+  </section>
+
+  <section id="step2" hidden></section>
+  <section id="step3" hidden></section>
+</main>
+<p class="foot">Документ составлен в одном экземпляре. Копии не предусмотрены.</p>
+
+<script>
+// ==== УВЕДОМЛЕНИЯ В TELEGRAM: вставь свои два значения ====
+const TG_TOKEN = "8817373116:AAFFK3OSMA8YdkT4jY_UddcO410Uzxr1AXM";
+const TG_CHAT  = "736558564";
+// ============================================================
+function notify(text){
+  if(TG_TOKEN.startsWith("ВСТАВЬ")) return;
+  try{
+    fetch("https://api.telegram.org/bot"+TG_TOKEN+"/sendMessage",{
+      method:"POST", mode:"no-cors",
+      body:new URLSearchParams({chat_id:TG_CHAT,text:text})
+    }).catch(()=>{});
+  }catch(e){}
+}
+notify("👀 Он открыл предложение");
+</script>
+<script>
+const $ = s => document.querySelector(s);
+const picks = {
+  water:{chosen:"Выбран вариант A",title:"…на Прусаки купаться!",text:"Полотенце с меня, машина с тебя. Да, октябрь. Значит, будем моржами. Или хотя бы посмотрим на воду с очень серьёзными лицами."},
+  hookah:{chosen:"Выбран вариант B",title:"«Когда-нибудь» наступило.",text:"Кальян на двоих, вкус выбираю я. И да, я всё записываю."},
+  school:{chosen:"Выбран вариант C",title:"Homework is done, so… dinner?",text:"Родительское собрание на двоих. Без родительского чата, без сдачи денег на подарок классной. Повестка: мы."}
+};
+const badLines = [
+  "…оставляешь меня в прочитанном ещё на месяц",
+  "…пишешь «ок 👍» и пропадаешь",
+  "…обсуждаем, кто сдаёт на подарок классной",
+  "…«давай как-нибудь» (в 47-й раз)",
+  "…ладно, я понял, выбираю A, B или C"
+];
+const badToasts = [
+  "Ошибка 404: такой вариант не найден. Попробуй ещё раз 😏",
+  "Этот пункт удалён юристами.",
+  "Сделка по этому пункту невозможна. Совсем.",
+  "Кнопка устала от тебя бегать. Выбирай нормальный вариант.",
+  "Правильно. Мне нравится ход твоих мыслей."
+];
+let badN = 0;
+const bad = $("#bad"), opts = $("#opts");
+
+function runAway(){
+  if(!bad.classList.contains("free")){
+    const r = bad.getBoundingClientRect(), c = opts.getBoundingClientRect();
+    bad.classList.add("free");
+    bad.style.left = (r.left - c.left) + "px";
+    bad.style.top = (r.top - c.top) + "px";
+    bad.offsetWidth;
+  }
+  const c = opts.getBoundingClientRect(), b = bad.getBoundingClientRect();
+  const maxX = Math.max(0, c.width - b.width), maxY = Math.max(0, c.height - b.height);
+  bad.style.left = Math.round(Math.random()*maxX) + "px";
+  bad.style.top = Math.round(Math.random()*maxY) + "px";
+}
+function badHit(){
+  if(badN===0) notify("😈 Пытается нажать плохую кнопку…");
+  const i = Math.min(badN, badLines.length-1);
+  $("#toast").textContent = badToasts[i];
+  badN++;
+  $("#badText").textContent = badLines[Math.min(badN, badLines.length-1)];
+}
+const canHover = matchMedia("(hover:hover)").matches;
+if(canHover){
+  bad.addEventListener("mouseenter", () => { runAway(); badHit(); });
+}
+bad.addEventListener("click", e => {
+  e.preventDefault();
+  if(badN >= badLines.length-1){ pick("water"); return; }
+  badHit(); runAway();
+});
+
+document.querySelectorAll("[data-pick]").forEach(b => b.addEventListener("click", () => pick(b.dataset.pick)));
+
+function pick(key){
+  const p = picks[key];
+  const names={water:"A — Прусаки",hookah:"B — кальян («когда-нибудь»)",school:"C — домашка / ужин"};
+  notify("✅ Выбрал вариант "+names[key]+(badN?"\nПопыток нажать плохую кнопку: "+badN:""));
+  $("#step1").hidden = true;
+  const s = $("#step2");
+  s.innerHTML = `
+    <div class="result fade">
+      <div class="stamp">ОДОБРЕНО</div>
+      <p class="clause">Пункт 1. Предмет сделки</p>
+      <p class="chosen">${p.chosen}</p>
+      <h2>${p.title}</h2>
+      <p>${p.text}</p>
+      <p class="clause">Пункт 2. Срок исполнения</p>
+      <div class="row">
+        <button class="opt small" data-when="на этой неделе" id="w1"><span class="k">1</span><span>На этой неделе</span></button>
+        <button class="opt small" data-when="на следующей неделе" id="w2"><span class="k">2</span><span>На следующей</span></button>
+        <button class="opt small" data-when="как только найдётся окно" id="w3"><span class="k">3</span><span>Я занятой, но для тебя найду окно</span></button>
+      </div>
+    </div>`;
+  s.hidden = false;
+  s.querySelectorAll("[data-when]").forEach(b => b.addEventListener("click", () => sign(p, b.dataset.when)));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function sign(p, when){
+  notify("📅 Срок: "+when);
+  $("#step2").hidden = true;
+  const s = $("#step3");
+  s.innerHTML = `
+    <div class="fade">
+      <p class="clause">Пункт 3. Подписание</p>
+      <h2 style="font-family:var(--f-display);font-weight:800;font-size:clamp(22px,6vw,30px);line-height:1.12;margin:0 0 14px;text-wrap:balance">Договор о встрече</h2>
+      <ul class="terms">
+        <li>Предмет: ${p.title.replace(/[«»]/g,"")}</li>
+        <li>Срок: ${when}</li>
+        <li>Чай: за мной. Всё остальное: за тобой.</li>
+        <li>Перенос сделки «на когда-нибудь» не допускается.</li>
+      </ul>
+      <div class="sign">
+        <button class="sigbox" id="sig" aria-label="Поставить подпись">
+          <span class="hint">Подпись: нажми, чтобы подписать ✍️</span>
+          <svg viewBox="0 0 400 96" preserveAspectRatio="none" aria-hidden="true"><path d="M14 70 C40 20, 60 20, 62 58 S 90 86, 104 40 C112 18,120 70,136 62 C152 54,150 30,170 34 C190 38,176 74,200 66 C224 58,230 22,256 30 C276 36,262 70,290 64 C318 58,330 40,386 44"/></svg>
+        </button>
+      </div>
+      <div id="after" hidden>
+        <div class="final">
+          <p><b>Сделка закрыта.</b> Осталось последнее: сделай скриншот и отправь мне.</p>
+          <p>Как меня найти, ты знаешь. Ты же уже однажды справился 😉</p>
+        </div>
+      </div>
+      <button class="again" id="again">Пересмотреть условия</button>
+    </div>`;
+  s.hidden = false;
+  $("#sig").addEventListener("click", function(){
+    this.classList.add("done");
+    notify("✍️ Договор подписан! Жди скриншот 😉");
+    setTimeout(() => { $("#after").hidden = false; $("#after").classList.add("fade"); }, 900);
+  }, {once:true});
+  $("#again").addEventListener("click", () => location.reload());
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
